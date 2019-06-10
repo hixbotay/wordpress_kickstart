@@ -80,7 +80,7 @@ if($_GET['action']=='convert_email'){
 		update_option( $o->option_name, $mods );
 	}
 	$wpdb->query("UPDATE {$wpdb->prefix}users SET user_email='{$current_email}' WHERE user_email LIKE '%{$old_email}%'");
-	$wpdb->query("UPDATE {$wpdb->prefix}users SET post_content=REPLACE(post_content, '{$old_email}', '{$current_email}') WHERE post_content LIKE '%{$old_email}%'");
+	$wpdb->query("UPDATE {$wpdb->prefix}posts SET post_content=REPLACE(post_content, '{$old_email}', '{$current_email}') WHERE post_content LIKE '%{$old_email}%'");
 	die('done');
 }
 if($_GET['action']=='convert'){

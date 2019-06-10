@@ -61,7 +61,8 @@ wp-content/plugins/*
 wp-content/themes/*
 !debug
 !migrations
-!wp-content/plugins/hbpro/
-!wp-content/themes/zeno5/
+!wp-content/plugins/fvn/
+!wp-content/themes/freelancerviet.net/
+!wp-content/themes/flatsome/
 !hbtool.php
 configuration.php

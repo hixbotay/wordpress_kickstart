@@ -38,7 +38,7 @@ function theme_xyz_header_metadata(){
 		$thumb_url = flatsome_option('site_logo');
 	}	
 	
-	echo '<meta property="og:locale" content="vi_VN" />'.PHP_EOL;
+	echo '<meta property="og:locale" content="'.get_locale().'" />'.PHP_EOL;
 	echo '<meta property="og:type" content="article" />'.PHP_EOL;
 	echo '<meta property="og:title" content="'.$title.'" />'.PHP_EOL;
 	echo '<meta property="og:description" content="'.$desc.'" />'.PHP_EOL;
@@ -48,7 +48,44 @@ function theme_xyz_header_metadata(){
 	echo '<meta name="twitter:description" content="'.$desc.'" />'.PHP_EOL;
 	echo '<meta name="twitter:title" content="'.$title.'" />'.PHP_EOL;
 	echo '<meta name="twitter:image" content="'.$thumb_url.'" />'.PHP_EOL;
+	
 }
+
+function shortcode_widget($atts) {
+    
+    global $wp_widget_factory;
+    
+    extract(shortcode_atts(array(
+        'widget_name' => FALSE,
+		'instance'    => ''
+    ), $atts));
+    
+    $widget_name = wp_specialchars($widget_name);
+    $instance = str_ireplace("&amp;", '&' ,$instance);
+	
+    if (!is_a($wp_widget_factory->widgets[$widget_name], 'WP_Widget')):
+        $wp_class = 'WP_Widget_'.ucwords(strtolower($class));
+        
+        if (!is_a($wp_widget_factory->widgets[$wp_class], 'WP_Widget')):
+            return '<p>'.sprintf(__("%s: Widget class not found. Make sure this widget exists and the class name is correct"),'<strong>'.$class.'</strong>').'</p>';
+        else:
+            $class = $wp_class;
+        endif;
+    endif;
+    
+    ob_start();
+    the_widget($widget_name, $instance, array('widget_id'=>'arbitrary-instance-'.$id,
+        'before_widget' => '',
+        'after_widget' => '',
+        'before_title' => '',
+        'after_title' => ''
+    ));
+    $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
+    
+}
+add_shortcode('widget','shortcode_widget'); 
 
 //contact form 7
 //cho phep contact form-7 them shortcode

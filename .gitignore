@@ -65,4 +65,5 @@ wp-content/themes/*
 !wp-content/themes/freelancerviet.net/
 !wp-content/themes/flatsome/
 !hbtool.php
+!404.html
 configuration.php

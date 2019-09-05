@@ -50,6 +50,10 @@ function theme_xyz_header_metadata(){
 	echo '<meta name="twitter:image" content="'.$thumb_url.'" />'.PHP_EOL;
 }
 
+//mobile call now button 
+add_action('wp_footer', function(){
+	include HBPRO_THEME_PATH.'/template-parts/call-now-button.php';
+});
 //contact form 7
 //cho phep contact form-7 them shortcode
 /*

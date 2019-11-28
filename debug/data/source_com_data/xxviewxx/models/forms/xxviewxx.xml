@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fieldset name="basic" addfieldpath="/administrator/components/com_Xxoptionxx/elements">
+        <field name="id" type="hidden" readonly="true" />
+        <field name="title" type="text" class="inputbox" size="40" label="COM_BOOKPRO_XXVIEWXX_TITLE"
+            description="COM_BOOKPRO_XXVIEWXX_TITLE" required="true" />
+         
+        <field name="code" type="text" class="inputbox" size="40" label="COM_BOOKPRO_APP_CODE"
+            description="COM_BOOKPRO_APP_CODE" required="true" />         
+         
+        <field name="desc" type="editor" buttons="true" hide="pagebreak,readmore" class="inputbox" 
+			filter="JComponentHelper::filterText" label="COM_BOOKPRO_APP_DESCRIPTION"
+            description="COM_BOOKPRO_APP_DESCRIPTION" />
+         
+        <field name="image" type="media" directory="" hide_none="1" label="COM_BOOKPRO_AGENT_IMAGE"
+            	description="COM_BOOKPRO_AGENT_IMAGE" />
+		
+		<field name="birthday" type="calendar" class="inputbox" label="Expired" description="Expired" required="false" autoclose="true" showtime="false"/>
+         
+        <field name="state" type="radio" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="btn-group" size="1" default="1" >
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>			
+		</field>
+         
+    </fieldset>
+</form>

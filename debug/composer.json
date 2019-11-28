@@ -1,0 +1,7 @@
+{
+    "require": {
+        "joomla/database": "^1.6",
+        "joomla/application": "^1.9",
+        "doctrine/migrations": "^2.0"
+    }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.2" method="upgrade">
+	<name>com_jbdebug</name>
+	<creationDate>June 2011</creationDate>
+	<author>Ngo Van Quan</author>
+	<authorEmail>quan@joombooking.com</authorEmail>
+	<authorUrl>http://joombooking.com</authorUrl>
+	<copyright>http:://joombooking.com</copyright>
+	<license>GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
+	<version>2.4.8</version>
+	<description>Jbdebug</description>
+	<scriptfile>script.php</scriptfile>
+	<administration></administration>
+	<files>		
+		<folder>controllers</folder>
+		<folder>views</folder>
+		<folder>assets</folder>
+		<filename>index.html</filename>
+		<filename>jbdebug.php</filename>
+		<filename>controller.php</filename>
+		<filename>router.php</filename>
+	</files>
+</extension>

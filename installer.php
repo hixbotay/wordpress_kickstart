@@ -27,10 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		generateHtaccess();
 		echo "{$site} FINISH \n";
-		if($_POST['delete_install']){
-			unlink(JPATH_ROOT.'/installer.php');
-			unlink($sql_file);
-		}
+		
+		clearTrash();
 		jb_redirect(get_root());
 		exit;
 	}catch(Exception $e){
@@ -45,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
 <form action="installer.php" method="POST" style="padding:20px;">
-	<h1>Installation</h1>
+	<center><h1>Installation</h1></center>
 	<div class="form-group row">
 		<label for="inputPassword" class="col-sm-2 col-form-label">Database name</label>
 		<div class="col-sm-10">
@@ -95,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </form>
 <div class="row" style="background:black;color:white;padding:20px">
 		<div>@copyright Freelancerviet.net</div>
-		<div class="pull-right"><a href="https://www.paypal.me/vuonganhduong812">Donation</a></div>
+		<div class="pull-right"><a target="_blank" href="https://www.paypal.me/vuonganhduong812/5">Donation</a></div>
 	</div>
 
 <?php 
@@ -313,6 +311,10 @@ function convertDbUrl(){
 	$wpdb->query("UPDATE {$wpdb->prefix}options SET option_value='{$current_url}' WHERE option_name='home' OR option_name='siteurl'");
 	//update password
 	$wpdb->query("UPDATE {$wpdb->prefix}users SET user_pass = MD5('{$_POST['admin_password']}'),user_login='{$_POST['admin_username']}' where ID = 1");
+	//change setting url
+	if($_POST['change_url']){
+		$wpdb->query("UPDATE {$wpdb->prefix}options SET option_value='' WHERE option_name='permalink_structure'");
+	}
 }
 
 
@@ -334,4 +336,11 @@ function generateHtaccess(){
 	</IfModule>
 	
 	# END WordPress");
+}
+
+function clearTrash(){
+	if($_POST['delete_install']){
+		unlink(JPATH_ROOT.'/installer.php');
+	}
+	unlink(JPATH_ROOT.'/xmlrpc.php');
 }

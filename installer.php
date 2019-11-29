@@ -2,6 +2,8 @@
 define('JPATH_ROOT',(__DIR__));
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	try{
+		validateInput();
+
 		unlink(JPATH_ROOT.'/.htaccess');
 		$sql_file = JPATH_ROOT.'/database.sql';
 		if(!file_exists($sql_file)) 
@@ -66,6 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<label for="inputPassword" class="col-sm-2 col-form-label">Database host</label>
 		<div class="col-sm-10">
 			<input type="" class="form-control" name="DB_HOST" value="localhost" required>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label for="inputPassword" class="col-sm-2 col-form-label">Admin username</label>
+		<div class="col-sm-10">
+			<input type="" class="form-control" name="admin_username" value="admin" required>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label for="inputPassword" class="col-sm-2 col-form-label">Admin password</label>
+		<div class="col-sm-10">
+			<input type="" class="form-control" name="admin_password" value="" required>
 		</div>
 	</div>
 	<div class="form-group row">
@@ -135,6 +149,13 @@ function unzipFile($file,$destination){
 		return true;
 	} 
 	return false;
+}
+
+function validateInput(){
+	if(empty($_POST['DB_USER'])) throw new Exception('Please input Datatabase username');
+	if(empty($_POST['DB_HOST'])) throw new Exception('Please input Datatabase host');
+	if(empty($_POST['admin_username'])) throw new Exception('Please input Admin login name');
+	if(empty($_POST['admin_password'])) throw new Exception('Please input Admin login password');
 }
 
 function getDbPrefix($file){
@@ -291,7 +312,7 @@ function convertDbUrl(){
 
 	$wpdb->query("UPDATE {$wpdb->prefix}options SET option_value='{$current_url}' WHERE option_name='home' OR option_name='siteurl'");
 	//update password
-	$wpdb->query("UPDATE {$wpdb->prefix}users SET user_pass = MD5('Koph4iem132'),user_login='admin1' where ID = 1");
+	$wpdb->query("UPDATE {$wpdb->prefix}users SET user_pass = MD5('{$_POST['admin_password']}'),user_login='{$_POST['admin_username']}' where ID = 1");
 }
 
 

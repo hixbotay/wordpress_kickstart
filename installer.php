@@ -200,7 +200,7 @@ function writeConfigFile($db_name,$db_user,$db_pass,$db_host,$table_prefix){
 			}else if(strpos($line,'table_prefix')!==false){
 				$line = "\$table_prefix  = '{$table_prefix}';";
 			}
-			if(!empty($line)){
+			if(!empty(trim($line))){
 				$new_content[] = $line;
 			}
 			
@@ -211,7 +211,7 @@ function writeConfigFile($db_name,$db_user,$db_pass,$db_host,$table_prefix){
 	} else {
 		throw new Exception('Can not read config file');
 	} 
-	return file_put_contents('wp-config.php',$new_content);
+	return file_put_contents('wp-config.php',implode(PHP_EOL,$new_content));
 }
 
 function generateDbName(){

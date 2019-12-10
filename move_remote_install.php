@@ -2,10 +2,13 @@
 ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 60000);
 
-$list = file_get_contents('http://freelancerviet.net/api/getList.php');
+$list = file_get_contents('http://freelancerviet.net/api/get-none-install-list');
 $list = json_decode($list);
+echo '<pre>';print_r($list);
+$failed= [];
 foreach($list as $l){
-	$url = 'http://freelancerviet.net/demo/'.$l.'/installer.php';
+	$url = 'http://demo.freelancerviet.net/'.$l.'/installer.php?v='.randomString(11);
+	
 	$t = microtime(1);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
@@ -25,11 +28,17 @@ foreach($list as $l){
 	$response = curl_exec($ch);
 	$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
-	if($httpcode != '200');{
+	
+	if($httpcode != '200'){
 		write_log('install-failed.txt',$l.PHP_EOL.$response);	
+		$failed[] = $l;
 	}
 	write_log('install.txt',$response.PHP_EOL.'excutetime '.(microtime(1) - $t));
+	//echo $response.'<br>';
+	echo $url.PHP_EOL;
+	
 }
+echo 'FAILED '.json_encode($failed);
 echo "FINISH\n";
 
 function getNewFolder($file_name, $des){
@@ -127,3 +136,18 @@ function write_log($log_file, $error){
 	fwrite($fh, $error);
 	fclose($fh);
 }
+function randomString($length){
+		$order = '';
+		$chars = "0123456789abcdefghijklmnopqrstwvxyzABCDEFGHIJKLMNOPQRSTWVXYZ";
+		srand((double)microtime()*1000000);
+		$i = 0;
+		$total_length = strlen($chars);
+		while ($i < $length) {
+			$num = rand() % $total_length;
+			$tmp = substr($chars, $num, 1);
+			$order = $order . $tmp;
+			$i++;
+		}
+		return $order;
+// 		JFactory::getDbo()->getQuery()->;
+	}

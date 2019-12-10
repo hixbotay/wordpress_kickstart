@@ -67,5 +67,6 @@ wp-content/themes/*
 !hbtool.php
 !installer.php
 !move_remote_install.php
+!kickstart.php
 !404.html
 configuration.php

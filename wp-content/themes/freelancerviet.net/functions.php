@@ -1,5 +1,8 @@
 <?php
-//them shortcode
+
+//using clasic editor 
+add_filter('use_block_editor_for_post', '__return_false');
+//add shortcode
 if(!defined('HBPRO_THEME_PATH')) define('HBPRO_THEME_PATH', (__DIR__));
 //shortcode
 foreach (glob(HBPRO_THEME_PATH.'/shortcodes/*.php') as $filename)

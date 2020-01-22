@@ -189,6 +189,9 @@ function writeConfigFile($db_name,$db_user,$db_pass,$db_host,$table_prefix){
 	$handle = fopen('wp-config.php', "r");
 	if ($handle) {
 		while (($line = fgets($handle)) !== false) {
+			if(strpos($line,'WPCACHEHOME')) continue;
+			if(strpos($line,'WP_CACHE')) continue;
+			
 			if(strpos($line,'DB_NAME')!==false){
 				$line = "define('DB_NAME', '{$db_name}');";
 			}else if(strpos($line,'DB_USER')!==false){
@@ -229,6 +232,12 @@ function generateDb($mysql_host,$mysql_username,$mysql_password,$mysql_database)
 	if ($result->num_rows == 0) {
 		if(!$conn->query('CREATE DATABASE '.$mysql_database.' CHARACTER SET utf8 COLLATE utf8_unicode_ci')){
 			throw new Exception('Create DB error '.$conn->error);
+		}
+	}else{
+		if($_POST['drop_db_existed']){
+			if(!$conn->query('DROP DATABASE '.$mysql_database)){
+				throw new Exception('drop DB error '.$conn->error);
+			}
 		}
 	}
 	return true;
@@ -278,23 +287,6 @@ function convertDbUrl(){
 	global $wpdb;
 	$old_url = $wpdb->get_var('select option_value from '.$wpdb->prefix.'options where option_name="home"');
 	$old_url = trim($old_url,'/');
-	$options = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}options WHERE option_value LIKE '%{$old_url}%'");
-	
-	foreach($options as $o){
-		$mods = get_option( $o->option_name );
-		
-		if(is_array($mods) || is_object($mods)){
-			foreach($mods as &$r){
-				if(is_string($r)){
-					$r=str_replace($old_url,$current_url,$r);
-				}
-			}
-		}else{
-			$mods=str_replace($old_url,$current_url,$mods);
-		}
-		
-		update_option( $o->option_name, $mods );
-	}
 	
 	//convert post content
 	$wpdb->query("UPDATE {$wpdb->prefix}posts SET post_content=REPLACE(post_content, '{$old_url}', '{$current_url}') WHERE post_content LIKE '%{$old_url}%'");
@@ -314,6 +306,29 @@ function convertDbUrl(){
 	//change setting url
 	if($_POST['change_url']){
 		$wpdb->query("UPDATE {$wpdb->prefix}options SET option_value='' WHERE option_name='permalink_structure'");
+	}
+	
+	$options = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}options WHERE option_value LIKE '%{$old_url}%'");
+	foreach($options as $o){
+		$mods = get_option( $o->option_name );
+		if($o->option_name=='duplicator_package_active'){
+			delete_option('duplicator_package_active');
+		}else{
+			if(is_array($mods) || is_object($mods)){
+				foreach($mods as &$r){
+					if(is_string($r)){
+						//print_r($r);
+						$r=str_replace($old_url,$current_url,$r);
+					}
+				}
+			}else{
+				if(is_string($mods))
+					$mods=str_replace($old_url,$current_url,$mods);
+				
+			}
+			
+			update_option( $o->option_name, $mods );
+		}	
 	}
 }
 

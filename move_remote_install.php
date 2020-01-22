@@ -22,6 +22,7 @@ foreach($list as $l){
 		'admin_password'=>'Koph4iem132',
 		'change_url'=>'1',
 		'delete_install'=>'1',
+		'drop_db_existed' => '1'
 	]);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		
@@ -35,9 +36,10 @@ foreach($list as $l){
 	}
 	write_log('install.txt',$response.PHP_EOL.'excutetime '.(microtime(1) - $t));
 	//echo $response.'<br>';
-	echo $url.PHP_EOL;
+	
 	
 }
+write_log('install-failed.txt','FAILED '.json_encode($failed));
 echo 'FAILED '.json_encode($failed);
 echo "FINISH\n";
 

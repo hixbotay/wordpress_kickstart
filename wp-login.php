@@ -7,7 +7,7 @@
  *
  * @package WordPress
  */
-if(!$_REQUEST['redirect_to'] && !$_REQUEST['action'] !$_REQUEST['loggedout']){
+if(!$_REQUEST['redirect_to'] && !$_REQUEST['action'] && !$_REQUEST['loggedout']){
 	header("HTTP/1.0 404 Not Found");
 	exit;
 }

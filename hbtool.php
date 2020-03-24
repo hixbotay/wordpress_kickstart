@@ -1,6 +1,8 @@
 <?php 
 	
-
+if(!defined('DS')){
+	define('DS',DIRECTORY_SEPARATOR);
+}
 require( dirname(__FILE__) . '/wp-load.php' );
 error_reporting(E_ERROR | E_WARNING);
 ini_set('display_errors', 1);
@@ -244,34 +246,41 @@ if($_GET['action']=='flatsome_theme_reset'){
 
 if($_GET['action']=='zip'){
 	if(!is_file('website.zip')){
-		EXPORT_DATABASE(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+		$sourcePath = $sourcefolder.'website.zip';
 		
 		$rootPath = realpath(__DIR__);
 		echo $rootPath.'<br>';		
 		// Initialize archive object
-		$zip = new ZipArchive();
-		$zip->open('website.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
+		//start zip
+		$sourcefolder = $rootPath.DS;
+		EXPORT_DATABASE(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+		//copy installer file
+		copy('installer.php',$sourcefolder.'installer.php');
+		$strLen = strlen($sourcefolder);
+		$zip = new ZipArchive();		
+		$zip->open($sourcePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
 		// Create recursive directory iterator
 		/** @var SplFileInfo[] $files */
 		$files = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($rootPath),
+			new RecursiveDirectoryIterator($sourcefolder),
 			RecursiveIteratorIterator::LEAVES_ONLY
 		);
 
-		foreach ($files as $name => $file)
+		foreach ($files as $file)
 		{
 			// Skip directories (they would be added automatically)
 			if (!$file->isDir())
 			{
 				// Get real and relative path for current file
 				$filePath = $file->getRealPath();
-				$relativePath = substr($filePath, strlen($rootPath) + 1);
+				$relativePath = substr($filePath, $strLen);
 
 				// Add current file to archive
-				$zip->addFile($filePath, $relativePath);
+				$zip->addFile($filePath, str_replace("\\","/",$relativePath));
 			}
 		}
+		$zip->close();
 	}
 	echo 'Zip download:<a href="'.get_option( 'siteurl' ).'/website.zip">Download</a>';
 	exit;
